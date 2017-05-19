@@ -56,29 +56,31 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_CLASS_AVAILABLE_IOS(2_0) @interface UIResponder : NSObject <UIResponderStandardEditActions>
 
+#pragma mark - 响应者相关方法
+
 /** 获取下一个响应者 */
 #if UIKIT_DEFINE_AS_PROPERTIES
 @property(nonatomic, readonly, nullable) UIResponder *nextResponder;
 #else
-- (nullable UIResponder*)nextResponder;
+- (nullable UIResponder *)nextResponder;
 #endif
 
-/** 判断对象是否可以成为第一响应者。默认返回NO */
+/** 是否允许成为第一响应者。默认返回NO */
 #if UIKIT_DEFINE_AS_PROPERTIES
 @property(nonatomic, readonly) BOOL canBecomeFirstResponder;
 #else
 - (BOOL)canBecomeFirstResponder;
 #endif
-/** 接收者接受了第一响应者的状态就返回YES，拒绝了返回NO。默认返回YES */
+/** 设置成为第一响应者 */
 - (BOOL)becomeFirstResponder;
 
-/** 判断对象是否可以放弃第一响应者。默认返回YES */
+/** 是否允许放弃第一响应者。默认返回YES */
 #if UIKIT_DEFINE_AS_PROPERTIES
 @property(nonatomic, readonly) BOOL canResignFirstResponder;
 #else
 - (BOOL)canResignFirstResponder;
 #endif
-/** 返回是否放弃第一响应者 */
+/** 设置放弃第一响应者 */
 - (BOOL)resignFirstResponder;
 
 /** 判断对象是否是第一响应者 */
@@ -88,6 +90,7 @@ NS_CLASS_AVAILABLE_IOS(2_0) @interface UIResponder : NSObject <UIResponderStanda
 - (BOOL)isFirstResponder;
 #endif
 
+#pragma mark - 触摸相关方法，一般用于响应屏幕触摸
 /** 手指按下时响应 */
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event;
 /** 手指移动时响应 */
@@ -99,6 +102,7 @@ NS_CLASS_AVAILABLE_IOS(2_0) @interface UIResponder : NSObject <UIResponderStanda
 /** 3DTouch响应(iOS9.1后使用) */
 - (void)touchesEstimatedPropertiesUpdated:(NSSet<UITouch *> *)touches NS_AVAILABLE_IOS(9_1);
 
+#pragma mark - 深按相关方法，一般用于遥控器按键响应
 /** 手指按压开始时响应 */
 - (void)pressesBegan:(NSSet<UIPress *> *)presses withEvent:(nullable UIPressesEvent *)event NS_AVAILABLE_IOS(9_0);
 /** 手指按压位置移动时响应 */
@@ -108,6 +112,7 @@ NS_CLASS_AVAILABLE_IOS(2_0) @interface UIResponder : NSObject <UIResponderStanda
 /** 按压取消(意外中断, 如:电话, 系统警告窗等) */
 - (void)pressesCancelled:(NSSet<UIPress *> *)presses withEvent:(nullable UIPressesEvent *)event NS_AVAILABLE_IOS(9_0);
 
+#pragma mark - 加速相关方法，一般用于摇一摇、运动事件监听等
 /** 开始加速 */
 - (void)motionBegan:(UIEventSubtype)motion withEvent:(nullable UIEvent *)event NS_AVAILABLE_IOS(3_0);
 /** 结束加速 */
@@ -129,7 +134,7 @@ NS_CLASS_AVAILABLE_IOS(2_0) @interface UIResponder : NSObject <UIResponderStanda
 
 @end
 
-/** 响应者支持的快捷键 */
+/** 快捷主键枚举 */
 typedef NS_OPTIONS(NSInteger, UIKeyModifierFlags) {
     UIKeyModifierAlphaShift     = 1 << 16,  //!< Alpha+Shift键.
     UIKeyModifierShift          = 1 << 17,  //!< Shift键.
@@ -148,17 +153,17 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface UIKeyCommand : NSObject <NSCopying, NSSec
 /** 初始化对象 */
 - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;
 
-/** 获取输入的字符串 */
+/** 获取快捷辅键（如快捷命令【Command+A】中的 A 键） */
 @property (nonatomic,readonly) NSString *input;
-/** 获取按键调节器 */
+/** 获取快捷主键（如快捷命令【Command+A】中的 Command 键） */
 @property (nonatomic,readonly) UIKeyModifierFlags modifierFlags;
-/** 按指定调节器键输入字符串并设置事件 */
+/** 显示给用户的快捷键标题 */
 @property (nullable,nonatomic,copy) NSString *discoverabilityTitle NS_AVAILABLE_IOS(9_0);
 
-/** 创建一个按键命令 */
+/** 创建一个快捷键命令 */
 + (UIKeyCommand *)keyCommandWithInput:(NSString *)input modifierFlags:(UIKeyModifierFlags)modifierFlags action:(SEL)action;
 
-/** 创建一个按键命令 */
+/** 创建一个快捷键命令 */
 + (UIKeyCommand *)keyCommandWithInput:(NSString *)input modifierFlags:(UIKeyModifierFlags)modifierFlags action:(SEL)action discoverabilityTitle:(NSString *)discoverabilityTitle NS_AVAILABLE_IOS(9_0);
 
 @end
@@ -166,7 +171,7 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface UIKeyCommand : NSObject <NSCopying, NSSec
 #pragma mark - 响应快捷命令
 
 @interface UIResponder (UIResponderKeyCommands)
-/** 获取组合快捷键命令(装有多个按键的数组) */
+/** 返回快捷键命令数组 */
 @property (nullable,nonatomic,readonly) NSArray<UIKeyCommand *> *keyCommands NS_AVAILABLE_IOS(7_0);
 @end
 
@@ -204,14 +209,14 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface UIKeyCommand : NSObject <NSCopying, NSSec
 
 @end
 
-#pragma mark - 响应者活动
+/** 特殊快捷辅键定义 */
+UIKIT_EXTERN NSString *const UIKeyInputUpArrow         NS_AVAILABLE_IOS(7_0); //!< 上按键.
+UIKIT_EXTERN NSString *const UIKeyInputDownArrow       NS_AVAILABLE_IOS(7_0); //!< 下按键.
+UIKIT_EXTERN NSString *const UIKeyInputLeftArrow       NS_AVAILABLE_IOS(7_0); //!< 左按键.
+UIKIT_EXTERN NSString *const UIKeyInputRightArrow      NS_AVAILABLE_IOS(7_0); //!< 右按键
+UIKIT_EXTERN NSString *const UIKeyInputEscape          NS_AVAILABLE_IOS(7_0); //!< Esc按键.
 
-/** 按键输入箭头指向 */
-UIKIT_EXTERN NSString *const UIKeyInputUpArrow         NS_AVAILABLE_IOS(7_0);
-UIKIT_EXTERN NSString *const UIKeyInputDownArrow       NS_AVAILABLE_IOS(7_0);
-UIKIT_EXTERN NSString *const UIKeyInputLeftArrow       NS_AVAILABLE_IOS(7_0);
-UIKIT_EXTERN NSString *const UIKeyInputRightArrow      NS_AVAILABLE_IOS(7_0);
-UIKIT_EXTERN NSString *const UIKeyInputEscape          NS_AVAILABLE_IOS(7_0);
+#pragma mark - 响应者活动
 
 @interface UIResponder (ActivityContinuation)
 /** 用户活动 */
