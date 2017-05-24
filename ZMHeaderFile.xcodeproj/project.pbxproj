@@ -53,6 +53,7 @@
 		E25ADDD51EA45BAA009173D9 /* ZMHeaderFileUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZMHeaderFileUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E25ADDD91EA45BAA009173D9 /* ZMHeaderFileUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZMHeaderFileUITests.m; sourceTree = "<group>"; };
 		E25ADDDB1EA45BAA009173D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E2BE71AD1ED288D200EE5D5A /* UIView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIView.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +149,7 @@
 			children = (
 				E24BC2EC1EADEE7B00E9B88C /* NSObject.h */,
 				E249F45E1EA5E72B003F3BE8 /* UIResponder.h */,
+				E2BE71AD1ED288D200EE5D5A /* UIView.h */,
 			);
 			path = HeaderClass;
 			sourceTree = "<group>";
